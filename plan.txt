@@ -1,0 +1,26 @@
+
+404  page design 
+
+about page design
+
+
+dashboard page:
+
+                 
+     TABLE
+
+left                                                                                                        right
+
+head => Posts by users                                                                     head=> action
+posts heading 
+when we click the post heading
+page it will be rediert to post detail page                                       edit , delete options
+
+links 
+1. Total Users
+2.Authors List
+3.search History
+4.total users visit list
+ 
+
+
