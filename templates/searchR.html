@@ -47,11 +47,10 @@
               {%if result%}
               {% for i in result %}
                 <div class="card" style="width: 18rem;">
-                    <img src="{{i.Image_url}}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">{{i.Title}}</h5>
-                        <p class="card-text">{{i.Description}}</p>
-                        <a href="/detail" class="btn btn-primary">Read More</a>
+                        <p class="card-text">{{i.Description[0:55]}}.......</p>
+                        <a href="{{url_for("post_details" , post_id = i._id)}}" class="btn btn-primary">Read More</a>
                     </div>
                 </div>
                 {%else%}
