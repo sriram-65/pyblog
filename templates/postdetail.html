@@ -10,34 +10,34 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand brand" href="/">Blogsee</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-              <li class="nav-item me-5">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-              <li class="nav-item me-5">
-                <a class="nav-link" href="#">About</a>
-              </li>
-              <li class="nav-item me-5">
-                <a class="nav-link" href="#">Upload</a>
-              </li>
-            
-            </ul>
-            <form class="d-flex" role="search" method="GET" action="/search">
-              <input class="form-control me-3" name="query"  type="search" required placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit" id="search">Search</button>
-            </form>
-            
+  <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand brand" href="/">Blogsee</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item me-5">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item me-5">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item me-5">
+            <a class="nav-link" href="/uploadge">Upload</a>
+          </li>
+        
+        </ul>
+        <form class="d-flex" role="search" method="GET" action="/search">
+          <input class="form-control me-3" name="query" type="search" required placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit" id="search">Search</button>
+        </form>
+        
 
-          </div>
-        </div>
-      </nav>
+      </div>
+    </div>
+  </nav>
      
       <br>
       <br>
@@ -45,31 +45,51 @@
     <div class="container">
         <div class="heading">
             <div class="row">
+       
               <div class="col-md-6">
-                <h1>Blog Details</h1>
+                <h1>{{post.Title}}</h1>
 
               </div>
               <div class="col-md-6">
-                <p>Upload Date : 15/03/25</p>
-                <p>Category : Education </p>
-                <p><a href="#" class="text-decoration-none">Back To Home Page</a></p>
+                <p>Upload Date : {{post.Create_at.strftime('%d %B %Y %a , %H:%M %p')}}</p>
+                <p>Category : {{post.Category}} </p>
+                <p><a href="/" class="text-decoration-none">Back To Home Page</a></p>
               </div>
             </div>
      
         </div>
         <div class="data">
-           <img src="https://cdn.dribbble.com/users/108280/screenshots/1848885/animation1.gif" class="img-fluid" alt="">
+          
+          {% if post.Image_url.endswith('.pdf') %}
+          <h3>View PDF:</h3>
+          <object data="{{ post.Image_url }}" type="application/pdf" width="100%" height="600px">
+              <p>Your browser does not support PDFs. <a href="{{ post.Image_url }}">Download the PDF</a>.</p>
+          </object>
+      {% elif post.Image_url.endswith(('jpg', 'jpeg', 'png', 'gif')) %}
+          <h3>View Image:</h3>
+          <img src="{{ post.Image_url }}" alt="Image" width="100%">
+      {% elif post.Image_url.endswith(('mp4', 'webm', 'ogg')) %}
+          <h3>Watch Video:</h3>
+          <video width="100%" controls>
+              <source src="{{ post.Image_url }}" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+      {% else %}
+          <p>Unsupported file type.</p>
+      {% endif %}
             <hr>
            
-                    <p class="m-4">Uploded By <span style="color:red; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-weight: 900; font-size: 27px;">Sriram</span> </p>
-           <h3><bold>Description</bold></h3>
+                    <p class="m-4">Uploded By <span style="color:red; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-weight: 900; font-size: 27px;">{{post.Author}}</span> </p>
+           <h3><b>Description</b></h3>
 
-           <p id="des"><i>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit, impedit facere ab id, nam esse fugit exercitationem asperiores laudantium ipsa libero. Perferendis excepturi quas sequi officiis delectus nostrum doloremque exercitationem.
-            Cupiditate molestiae nihil vero blanditiis totam recusandae veritatis illum, debitis repudiandae id pariatur consequatur unde accusantium ex expedita, sit et cum eos eligendi hic quisquam aut adipisci iure. </i></p>
-
+           <p id="des"><i>{{post.Description}} </i></p>
+       
+           
+           
             <br>
             <button class="btn btn-danger">Report Post ☠</button>
         </div>
+      
     </div>
    
     <footer class="bd-footer py-4 py-md-5 mt-5 bg-body-tertiary">
@@ -111,9 +131,13 @@
       </footer>
 </body>
 </html>
-
+<script>
+  
+  
+</script>
 <style>
     img{
         border-radius: 15px;
     }
 </style>
+
