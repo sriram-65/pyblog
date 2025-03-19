@@ -1,9 +1,16 @@
-from flask import Flask,jsonify,render_template,request,redirect
+from flask import Flask,jsonify,render_template,request,redirect,url_for
 import cloudinary
 import cloudinary.uploader
 from pymongo import MongoClient
+from bson import ObjectId
+import google.generativeai as genai
+from datetime import datetime
+
 
 app = Flask(__name__)
+
+genai.configure(api_key="AIzaSyAvyLEzkIaibw5BFF4ZCISLljZNbLKd2Cg")
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 cloudinary.config(
      cloud_name="dbrmvywb0",
@@ -16,18 +23,23 @@ User_Upload = data_base["UserUpload"]
 
 @app.route("/")
 def home():
-    collect_data  = list(User_Upload.find({} , {"_id":0}))
-    print("Fetched Data:", collect_data)
+    collect_data  = list(User_Upload.find({} , {"_id":1 , "Title":1 , "Description":1 , "Author":1, "Category":1, "Image_url":1}))
     return render_template("index.html" , data=collect_data)
-    
+
+
 @app.route("/recent")
 def recent():
     recents = User_Upload.find().sort("_id" , -1)
     return render_template("recent.html" , recents = recents)
 
-@app.route("/detail")
-def detail():
-    return render_template("postdetail.html")
+
+
+@app.route('/post/<post_id>')
+def post_details(post_id):
+    post = User_Upload.find_one({"_id": ObjectId(post_id)})
+    
+    return render_template('post_details.html', post=post)
+
 
 @app.route("/search" , methods=["GET"])
 def search():
@@ -42,24 +54,19 @@ def search():
                     "$regex":query , "$options":"i"
                 }
             },
-            {"Description":
-                {
-                    "$regex": query, "$options": "i"
-                }
-            }, 
+           
             {"Category": 
                 {
                     "$regex": query, "$options": "i"
                 }
             },   
-            {"Author": 
-                {
-                    "$regex": query, "$options": "i"
-                }
-            }   
+           
             ]
         })
     return render_template("searchR.html" , result = search_res,q=query)
+
+
+
 
 @app.route("/upload", methods=["POST"])
 def upload():
@@ -73,7 +80,7 @@ def upload():
         if not user_title or not user_des or not user_author or not user_cat or not user_file:
             return "Missing required fields", 400  
 
-        image = cloudinary.uploader.upload(user_file)
+        image = cloudinary.uploader.upload(user_file ,  resource_type="auto") 
         image_url = image.get("secure_url")
 
         DATA = {
@@ -81,7 +88,10 @@ def upload():
             "Description": user_des,
             "Author": user_author,
             "Category": user_cat,
-            "Image_url": image_url
+            "Image_url": image_url,
+            "Create_at":datetime.utcnow(),
+          
+            
         }
 
         User_Upload.insert_one(DATA) 
@@ -92,9 +102,11 @@ def upload():
         return f"Upload failed: {str(e)}", 500  
 
 
+
 @app.route("/uploadge")
 def upload_page():
     return render_template("upload.html")
+
 
 @app.errorhandler(404)
 def notfound(a):
