@@ -1,0 +1,5 @@
+flask
+gunicorn
+cloudinary
+pymongo
+google-generativeai
