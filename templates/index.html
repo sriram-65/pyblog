@@ -64,7 +64,7 @@
                     {%if i.Image_url.endswith(("jpg" , "png"))%}
                       <img src="{{ i.Image_url }}" class="card-img-top" alt="...">
                     {%elif i.Image_url.endswith(".pdf") %}
-                    <iframe data="{{ i.Image_url }}" type="application/pdf" width="100%" height="200px">
+                    <iframe src="{{ i.Image_url }}" type="application/pdf" width="100%" height="200px">
                       <p>Your browser does not support PDFs. <a href="{{ i.Image_url }}">Download the PDF</a>.</p>
                   </iframe>
                   {% elif i.Image_url.endswith(('mp4', 'webm', 'ogg'))%}
