@@ -17,8 +17,21 @@
         <div class="card-container">
             {%if recents%}
              {% for i in recents %}
-            <div class="card" style="width: 18rem;">
+            <div class="card" style="width: 18rem;;">
+                {%if i.Image_url.endswith(("jpg" , "png"))%}
                 <img src="{{i.Image_url}}" class="card-img-top" alt="...">
+                {%elif i.Image_url.endswith(".pdf")%}
+                <iframe src="{{ i.Image_url }}" type="application/pdf" width="100%" height="100px">
+                    <p>Your browser does not support PDFs. <a href="{{ i.Image_url }}">Download the PDF</a>.</p>
+                </iframe>
+                {% elif i.Image_url.endswith(('mp4', 'webm', 'ogg'))%}
+                <video width="100%" controls>
+                  <source src="{{ i.Image_url }}" type="video/mp4">
+                  Your browser does not support the video tag.
+              </video>
+              {%else%}
+                <p> Unsupported File </p>
+             {%endif%}
                 <div class="card-body">
                     <h5 class="card-title">{{i.Title}}</h5>
                     <p class="card-text">{{i.Description[0:40]}}......</p>
