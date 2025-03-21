@@ -33,6 +33,13 @@ def recent():
     return render_template("recent.html" , recents = recents)
 
 
+@app.route("/genDes/")
+def genDes():
+    prompts = request.args.get("prompt")
+    Gentext = model.generate_content(f'Generate a description about this title and give only the description about a 1000 words: {prompts} ')
+    return jsonify({"description": Gentext.text})  
+
+
 
 @app.route('/post/<post_id>')
 def post_details(post_id):
