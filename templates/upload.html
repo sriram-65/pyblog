@@ -43,10 +43,11 @@
       <br>
       <section id="home">
         <div class="container">
-          <h1 class="text-capitalize">Make Your Day with My App</h1>
+          <h1 class="text-capitalize">Make Your Day with My App (latest Update)</h1>
+          <p> Mar 21 , 2025 </p>
           <br>
           <div class="alert alert-danger" role="alert">
-            Warning: Please ensure that you upload only appropriate and legal content. Any uploads containing offensive, copyrighted, or sensitive material may be removed. By proceeding, you agree to comply with our terms and conditions.
+          Please ensure that you upload only appropriate and legal content. Any uploads containing offensive, copyrighted, or sensitive material may be removed. By proceeding, you agree to comply with our terms and conditions.
           </div>
           <button class="btn btn-dark"><a href="#upload" class="text-decoration-none" style="color:white">Get Start</a></button>
         </div>
@@ -65,6 +66,9 @@
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
                         <textarea class="form-control" name="des" id="description" rows="4" placeholder="Enter post description" required></textarea>
+                        <P></P>
+
+                        <button id="gendes" class="btn btn-warning">Generate Description By AI </button>
                     </div>
 
                     <div class="mb-3">
@@ -93,7 +97,7 @@
                         <img id="ai-image" class="img-fluid" />
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 mt-3">Upload</button>
+                    <button type="submit" class="btn btn-dark w-100 mt-3">Upload</button>
                 </form>
                 <a href="/" class="d-block text-center mt-3">Back to Home</a>
             </div>
@@ -140,6 +144,30 @@
     </style>
     <script>
 
+      let gendes = document.getElementById("gendes")
+      gendes.onclick = function(){
+        let pro = prompt("Enter Your Title To Generate a Description")
+        fetch(`/genDes?prompt=${pro}`).then(res=>res.json()).then(data =>document.getElementById("description").value = data["description"])
+      }
+let file= document.getElementById("file");
+file.addEventListener("change" , function(event){
+
+  const check= event.target.files[0]
+  if(check){
+    const size = (check.size / (1024*1024)).toFixed(2)
+    if(size>5){
+      Swal.fire({
+        title:"File Error",
+        text: `file Size Must Less than 5 MB Your File Size ${size} MB/GB`,
+        icon:"warning",
+        confirmButtonText: "OK"
+      })
+      file.value=""
+      return
+    }
+  }
+
+})
 
 const aiPromptInput = document.getElementById("ai-prompt");
 const generateBtn = document.getElementById("generate-btn");
@@ -201,7 +229,7 @@ generateBtn.addEventListener("click", async () => {
             Swal.fire({
               title: "Success!",
               text: "Iamge Is Generated Sucessfully. Now You Can Upload..",
-              icon: "success",
+              imageUrl:"https://i.pinimg.com/originals/35/f3/23/35f323bc5b41dc4269001529e3ff1278.gif",
               confirmButtonText: "OK"
             });
             
