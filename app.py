@@ -36,7 +36,7 @@ def recent():
 @app.route("/genDes/")
 def genDes():
     prompts = request.args.get("prompt")
-    Gentext = model.generate_content(f'Generate a description about this title and give only the description about a 1000 words: {prompts} ')
+    Gentext = model.generate_content(f'Generate a description about this title and give only the description about a 250 words: {prompts} ')
     return jsonify({"description": Gentext.text})  
 
 
