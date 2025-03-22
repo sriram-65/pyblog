@@ -8,8 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-
 </head>
 <body>
 
@@ -25,7 +23,7 @@
                 <a class="nav-link active" aria-current="page" href="/">Home</a>
               </li>
               <li class="nav-item me-5">
-                <a class="nav-link" href="#">About</a>
+                <a class="nav-link" href="/about">About</a>
               </li>
               <li class="nav-item me-5">
                 <a class="nav-link" href="#">Upload</a>
@@ -44,7 +42,7 @@
       <section id="home">
         <div class="container">
           <h1 class="text-capitalize">Make Your Day with My App (latest Update)</h1>
-          <p> Mar 21 , 2025 </p>
+          <p> Mar 22 , 2025 </p>
           <br>
           <div class="alert alert-danger" role="alert">
           Please ensure that you upload only appropriate and legal content. Any uploads containing offensive, copyrighted, or sensitive material may be removed. By proceeding, you agree to comply with our terms and conditions.
@@ -68,7 +66,7 @@
                         <textarea class="form-control" name="des" id="description" rows="4" placeholder="Enter post description" required></textarea>
                         <P></P>
 
-                        <button id="gendes" class="btn btn-warning">Generate Description By AI </button>
+                        <button id="gendes" class="btn btn-warning" >Generate Description By AI </button>
                     </div>
 
                     <div class="mb-3">
@@ -88,7 +86,7 @@
                     
                     <div class="mb-3">
                         <label for="ai-prompt" class="form-label">AI Image Prompt</label>
-                        <input type="text" class="form-control" id="ai-prompt" placeholder="Describe an image you want" >
+                        <textarea class="form-control" name="des" id="ai-prompt" rows="4" placeholder=" Enter Your AI Prompt" required></textarea>
                     </div>
 
                     <button type="button" class="btn btn-danger w-86" id="generate-btn">Generate AI Image</button>
@@ -143,11 +141,35 @@
      
     </style>
     <script>
-
+     
       let gendes = document.getElementById("gendes")
       gendes.onclick = function(){
+        gendes.innerHTML = "Wait The Ai Is Generating The Description.."
         let pro = prompt("Enter Your Title To Generate a Description")
-        fetch(`/genDes?prompt=${pro}`).then(res=>res.json()).then(data =>document.getElementById("description").value = data["description"])
+        gendes.disabled = true
+       let fetchedData = fetch(`/genDes?prompt=${pro}`).then(res=>res.json())
+       .then(data =>{
+         document.getElementById("description").value = data["description"]
+         gendes.disabled = false
+         gendes.innerHTML = "Generate Description By Ai"
+         Swal.fire({
+          title: "Success!",
+          text: "Description is Generated Sucessfully. Now You Can Upload..",
+          icon:"success",
+          confirmButtonText: "OK"
+        });
+       
+      }
+      )
+       .catch(er=>{
+        Swal.fire({
+          title:"Error",
+          text: `server Got Error While Generating the description`,
+          icon:"warning",
+          confirmButtonText: "OK"
+        })
+            
+       })      
       }
 let file= document.getElementById("file");
 file.addEventListener("change" , function(event){
