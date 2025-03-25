@@ -36,7 +36,7 @@ def recent():
 @app.route("/genDes/")
 def genDes():
     prompts = request.args.get("prompt")
-    Gentext = model.generate_content(f'Generate a description about this title and give only the description about a 250 words: {prompts} ')
+    Gentext = model.generate_content(f'Generate a description about this title and give only the description and display the text content on the text editor about a 250 words: {prompts} ')
     return jsonify({"description": Gentext.text})  
 
 
@@ -73,8 +73,28 @@ def search():
     return render_template("searchR.html" , result = search_res,q=query)
 
 
+PASSSWORD = "1324meta"
+@app.route("/dash/page/Auth/<password>/functions/getPage")
+def dash(password):
+    if(password == PASSSWORD):
+           dashPost = User_Upload.find({} , {"_id":1 , "Title":1})
+           cout_post = User_Upload.count_documents({})
+           return render_template("DashBoard.html" , posts=dashPost , count= cout_post)
+    else:
+        return render_template("Err.html" , msgs = "You Are Not A Developer")
+        
+ 
 
 
+@app.route("/del/<post_id>" , methods=["POST"])
+def delete(post_id):
+    try:
+        User_Upload.delete_one({"_id":ObjectId(post_id)})
+        return redirect(url_for("home"))
+        
+    except:
+        return jsonify({"ERROR" : "ERROR ON DELETING THE POST"})
+        
 @app.route("/upload", methods=["POST"])
 def upload():
     try:
@@ -109,7 +129,9 @@ def upload():
         return f"Upload failed: {str(e)}", 500  
 
 
-
+@app.route("/about")
+def about():
+    return render_template("about.html")
 @app.route("/uploadge")
 def upload_page():
     return render_template("upload.html")
@@ -120,4 +142,4 @@ def notfound(a):
     return render_template("404.html" , url=request.path) , 404
     
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True , port=1111)
