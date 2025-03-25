@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tiny.cloud/1/g07vr86co4z9834nb8dfeaebcakixs2j40h9j1x7yti8amac/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
 </head>
 <body>
@@ -63,7 +64,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" name="des" id="description" rows="4" placeholder="Enter post description" required></textarea>
+                        <textarea class="form-control" name="des" id="description" rows="4" placeholder="Enter post description"></textarea>
                         <P></P>
 
                         <button id="gendes" class="btn btn-warning" >Generate Description By AI </button>
@@ -86,7 +87,7 @@
                     
                     <div class="mb-3">
                         <label for="ai-prompt" class="form-label">AI Image Prompt</label>
-                        <textarea class="form-control" name="des" id="ai-prompt" rows="4" placeholder=" Enter Your AI Prompt"></textarea>
+                        <textarea class="form-control" name="des" id="ai-prompt" rows="4" placeholder=" Enter Your AI Prompt" ></textarea>
                     </div>
 
                     <button type="button" class="btn btn-danger w-86" id="generate-btn">Generate AI Image</button>
@@ -141,15 +142,27 @@
      
     </style>
     <script>
-     
+      tinymce.init({
+        selector: '#description',
+        height: 500,
+        menubar: 'view format',
+        plugins: [
+          'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 
+          'searchreplace', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 
+          'media', 'table', 'help', 'wordcount'
+        ],
+        toolbar: 'undo redo | styleselect | bold italic underline strikethrough | fontselect fontsizeselect forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table image media link | removeformat fullscreen code',
+        content_css: 'https://www.tiny.cloud/css/codepen.min.css'
+      })
+    
       let gendes = document.getElementById("gendes")
       gendes.onclick = function(){
-        gendes.innerHTML = "Wait The Ai Is Generating The Description.."
+       gendes.innerHTML = "Wait The Ai Is Generating The Description.."
         let pro = prompt("Enter Your Title To Generate a Description")
         gendes.disabled = true
        let fetchedData = fetch(`/genDes?prompt=${pro}`).then(res=>res.json())
        .then(data =>{
-         document.getElementById("description").value = data["description"]
+        document.getElementById("description").value = tinymce.get('description').setContent(data["description"]);
          gendes.disabled = false
          gendes.innerHTML = "Generate Description By Ai"
          Swal.fire({
