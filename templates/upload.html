@@ -190,10 +190,10 @@ file.addEventListener("change" , function(event){
   const check= event.target.files[0]
   if(check){
     const size = (check.size / (1024*1024)).toFixed(2)
-    if(size>5){
+    if(size>101){
       Swal.fire({
         title:"File Error",
-        text: `file Size Must Less than 5 MB Your File Size ${size} MB/GB`,
+        text: `file Size Must Less than 100 MB Your File Size ${size} MB/GB`,
         icon:"warning",
         confirmButtonText: "OK"
       })
