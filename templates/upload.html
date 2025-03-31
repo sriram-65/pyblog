@@ -43,7 +43,7 @@
       <section id="home">
         <div class="container">
           <h1 class="text-capitalize">Make Your Day with My App (latest Update)</h1>
-          <p> Mar 22 , 2025 </p>
+          <p> Mar 29 , 2025 </p>
           <br>
           <div class="alert alert-danger" role="alert">
           Please ensure that you upload only appropriate and legal content. Any uploads containing offensive, copyrighted, or sensitive material may be removed. By proceeding, you agree to comply with our terms and conditions.
@@ -190,10 +190,10 @@ file.addEventListener("change" , function(event){
   const check= event.target.files[0]
   if(check){
     const size = (check.size / (1024*1024)).toFixed(2)
-    if(size>101){
+    if(size>5){
       Swal.fire({
         title:"File Error",
-        text: `file Size Must Less than 100 MB Your File Size ${size} MB/GB`,
+        text: `file Size Must Less than 5 MB Your File Size ${size} MB/GB`,
         icon:"warning",
         confirmButtonText: "OK"
       })
