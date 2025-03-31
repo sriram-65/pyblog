@@ -64,7 +64,7 @@
           
           {% if post.Image_url.endswith('.pdf') %}
           <h3>View PDF:</h3>
-          <iframe  src="{{ post.Image_url }}" type="application/pdf" width="100%" height="600px">
+          <iframe src="{{ post.Image_url }}" type="application/pdf" width="100%" height="600px">
               <p>Your browser does not support PDFs. <a href="{{ post.Image_url }}">Download the PDF</a>.</p>
           </iframe>
       {% elif post.Image_url.endswith(('jpg', 'jpeg', 'png', 'gif')) %}
@@ -84,12 +84,39 @@
                     <p class="m-4">Uploded By <span style="color:red; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-weight: 900; font-size: 27px;">{{post.Author}}</span> </p>
            <h3><b>Description</b></h3>
 
-           <p id="des">{{post.Description | safe}}</p>
+           <p id="des"><i>{{post.Description | safe}} </i></p>
        
-           
+          <h3> comments : {{total}} </h3>
+
+          {% for com in c%}
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  <h5><B>{{com.username}} </B> </h5> ,   <small>commented on {{com.created_at.strftime('%d %B %Y %a')}} </small>
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <strong>{{com.msgs}}</strong> 
+                </div>
+              </div>
+            </div>
+          {%endfor%}
            
             <br>
-            <button class="btn btn-danger" id="copy">Copy the Page Url</button>
+            <hr>
+            <form action="{{url_for('comments')}}" method="POST">
+              <h4> Add Your Comments </h4>
+              <hr>
+              <input type="hidden" name="post_id" value="{{ post._id }}">
+              <input type="text" name="username" placeholder="Your Name" class="form-control" required>
+              <br>
+              <textarea name="msgs" placeholder="Write your comment..." class="form-control"   required></textarea>
+              <br>
+              <button type="submit" class="btn btn-warning">Post Comment</button> </form>
+               <br>
+            <button class="btn btn-danger" id="copy">Copy Page URL</button>
         </div>
       
     </div>
@@ -149,7 +176,7 @@
   
  copy.onclick  = function(){
   navigator.clipboard.writeText(url).then(()=>{
-    Swal.fire(`Url Copied        ${url}`)
+    Swal.fire(`Url Copied  ${url}`)
   })
  }
 
