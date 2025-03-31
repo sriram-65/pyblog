@@ -11,12 +11,5 @@
       "src": "/(.*)",
       "dest": "app.py"
     }
-  ],
-  {
-  "functions": {
-    "api/*": {
-      "maxRequestBodySize": "10mb"
-    }
-  }
-}
+  ]
 }
