@@ -12,7 +12,7 @@
    
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navbar">
         <div class="container-fluid">
           <a class="navbar-brand brand" href="/">Blogsee</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,54 +48,66 @@
 
         <div class="container">
          
-          <h1 class="text-capitalize">Make People Connected With Us.</h1>
+          <h1 class="text-capitalize">Make People <b>Connected With Us.<b></h1>
           <br>
-          <p>Thank You For Joining With Us .. Have Greate Day</p>
+          <p>Thank You For Joining With Us .. Have Great Day</p>
           <button class="btn btn-dark"><a href="#post" class="text-decoration-none" style="color:white">Get Start </a></button>
       
         </div>
 
       </section>
+  <hr>
+  <br>
+  <section id="post">
+    <div class="container">
+        <div class="row justify-content-center">
+            {% if data %}
+                {% for i in data %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow-sm">
+                            
+                            <div class="card-header d-flex align-items-center">
 
-      <section id="post">
-        <h1> POSTS </h1>
-        <br>
-        <a href="/recent" class="text-decoration-none me-3"> Show Latest Posts <i class="fa-solid fa-arrow-right"></i> </a>
-        <br>
-        <div class="card-container">
-          {% if data %}
-              {% for i in data %}
-                  <div class="card" style="width: 18rem;">
-                    {%if i.Image_url.endswith(("jpg" , "png"))%}
-                      <img src="{{ i.Image_url }}" class="card-img-top" alt="...">
-                    {%elif i.Image_url.endswith(".pdf") %}
-                    <iframe src="{{ i.Image_url }}" type="application/pdf" width="100%" height="200px">
-                      <p>Your browser does not support PDFs. <a href="{{ i.Image_url }}">Download the PDF</a>.</p>
-                  </iframe>
-                  {% elif i.Image_url.endswith(('mp4', 'webm', 'ogg'))%}
-                  <video width="100%" controls>
-                    <source src="{{ i.Image_url }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                {%else%}
-                  <p> Unsupported File </p>
-                  {%endif%}
-                    
-                      <div class="card-body">
-                          <h5 class="card-title">{{ i.Title | safe}}</h5>
-                          <p class="card-text">click The Read More Button To See Description...............</p>
-                          <a href="{{ url_for('post_details' , post_id=i._id) }}" class="btn btn-primary">Read More</a>
+                                <strong> Uploaded By : {{ i.Author}}</strong>
 
+                            </div>
 
-                      </div>
-                  </div>
-              {% endfor %}
-          {% else %}
-              <p>No POSTS HERE</p>
-          {% endif %}
-      </div>
-    </section>
-    
+                            
+                            <div class="card-body p-0">
+                                {% if i.Image_url.endswith(("jpg", "png")) %}
+                                    <img src="{{ i.Image_url }}" class="img-fluid" alt="Post">
+                                
+                                  {%elif i.Image_url.endswith(".pdf") %}
+                                    <iframe src="{{i.Image_url}}"> </iframe>
+                                  
+                                {% elif i.Image_url.endswith(('mp4', 'webm', 'ogg')) %}
+                                    <video class="w-100" controls>
+                                        <source src="{{ i.Image_url }}" type="video/mp4">
+                                    </video>
+                                {% endif %}
+                            </div>
+
+                            
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                   
+                                    <button class="btn btn-light"><i class="fa-regular fa-comment"></i></button>
+                                    <button class="btn btn-light"><i class="fa-regular fa-paper-plane"></i></button>
+                                </div>
+                               
+                                <p><strong>{{ i.Title }}</strong> </p>
+                                <a href="{{ url_for('post_details', post_id=i._id) }}" class="text-muted">Read More </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No posts here</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
 
 
     <footer class="bd-footer py-4 py-md-5 mt-5 bg-body-tertiary">
@@ -141,8 +153,19 @@
   body{
     width:100%;
     height:100vh;
-
+   
   }
+  #navbar{
+    box-shadow: 5px 5px 3px black;
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:100;
+    background: transparent !important;
+    backdrop-filter: blur(10px);
+  }
+ 
    .brand{
        font-weight: 900;
        font-size: larger;
@@ -152,10 +175,7 @@
    #home{
     width:100%;
     height:100vh;
-    background-image: url("https://cdn.dribbble.com/userupload/23646781/file/original-83141e8daaa41110fb9ab34daa6e8718.gif");
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+  
     display: flex;
     justify-content: center;
     align-items: center;
