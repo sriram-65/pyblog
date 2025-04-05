@@ -27,6 +27,9 @@
                 <a class="nav-link" href="/about">About</a>
               </li>
               <li class="nav-item me-5">
+                <a class="nav-link" href="/set">Settings</a>
+              </li>
+              <li class="nav-item me-5">
                 <a class="nav-link" href="#">Upload</a>
               </li>
             </ul>
@@ -43,7 +46,7 @@
       <section id="home">
         <div class="container">
           <h1 class="text-capitalize">Make Your Day with My App (latest Update)</h1>
-          <p> Mar 29 , 2025 </p>
+          <p> Apr 5 , 2025 </p>
           <br>
           <div class="alert alert-danger" role="alert">
           Please ensure that you upload only appropriate and legal content. Any uploads containing offensive, copyrighted, or sensitive material may be removed. By proceeding, you agree to comply with our terms and conditions.
@@ -72,7 +75,8 @@
 
                     <div class="mb-3">
                       <label for="description" class="form-label">Author</label>
-                      <input type="text" class="form-control" name="author" id="title" placeholder="Your Name" required>
+                      <input type="text" name="author" value="" class="form-control" id="name">
+                      
                   </div>
                   <div class="mb-3">
                     <label for="description" class="form-label">Category</label>
@@ -104,36 +108,9 @@
     </section>
 
 
-    <footer class="bd-footer py-4 py-md-5 mt-5 bg-body-tertiary">
-        <div class="container py-4 py-md-5 px-4 px-md-3 text-body-secondary">
-          <div class="row">
-            <div class="col-lg-3 mb-3">
-              <a class="d-inline-flex align-items-center mb-2 text-body-emphasis text-decoration-none" href="/" aria-label="Bootstrap">
-                <span class="fs-5">Blogsee</span>
-              </a>
-              <ul class="list-unstyled small">
-                <li class="mb-2">Designed and built with all the love in the world by Sriram.</li>
-                <li class="mb-2">Code licensed MIT, docs @SRIRAM.</li>
-                <li class="mb-2">Currently v1.0.0</li>
-              </ul>
-            </div>
-            <div class="col-6 col-lg-2 offset-lg-1 mb-3">
-              <h5>Links</h5>
-              <ul class="list-unstyled">
-                <li class="mb-2"><a href="/">Home</a></li>
-                <li class="mb-2"><a href="#">About</a></li>
-                <li class="mb-2"><a href="#">Upload</a></li>
-              </ul>
-            </div>
-            <div class="col-6 col-lg-2 mb-3">
-              <h5>Community</h5>
-              <ul class="list-unstyled">
-                <li class="mb-2"><a href="#">Issues</a></li>
-                <li class="mb-2"><a href="#">Discussions</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
+    
+    <footer class="bd-footer py-4 py-md-5 mt-5 bg-body-tertiary" style="text-align:center">
+      <b> Designed And Developed By SRIRAM</b>
     </footer>
 
     <style>
@@ -142,6 +119,10 @@
      
     </style>
     <script>
+      let names = document.getElementById("name")
+      let username = localStorage.getItem("UserName")
+      names.value = username;
+      
       tinymce.init({
         selector: '#description',
         height: 500,
@@ -190,10 +171,10 @@ file.addEventListener("change" , function(event){
   const check= event.target.files[0]
   if(check){
     const size = (check.size / (1024*1024)).toFixed(2)
-    if(size>5){
+    if(size>101){
       Swal.fire({
         title:"File Error",
-        text: `file Size Must Less than 5 MB Your File Size ${size} MB/GB`,
+        text: `file Size Must Less than 100 MB Your File Size ${size} MB/GB`,
         icon:"warning",
         confirmButtonText: "OK"
       })
