@@ -23,26 +23,18 @@ cloudinary.config(
 client = MongoClient("mongodb+srv://sriram65raja:1324sriram@cluster0.dejys.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 data_base = client["ai"]
 User_Upload = data_base["UserUpload"]
+USER_name = data_base["USER_name"]
 Comments_DATA = data_base["COMMENT"]
 
-@app.route("/delete")
-def delete_session():
-    session.clear()
-    return jsonify("Deleted Suessfully")
 
 @app.route("/")
 def home():
-    if "visit" not in session:
-        session["visit"] ="Visited"
-        return render_template("main.html")
-        
-    
     collect_data  = list(User_Upload.find({} , {"_id":1 , "Title":1 , "Description":1 , "Author":1, "Category":1, "Image_url":1}))
     return render_template("index.html" , data=collect_data ,  live_streams=live_streams)
 
 @app.route("/recent")
 def recent():
-    recents = User_Upload.find().sort("_id" , -1)
+    recents = User_Upload.find().sort("_id" , -1).limit(4)
     return render_template("recent.html" , recents = recents)
 
 
@@ -75,7 +67,8 @@ def post_details(post_id):
     post = User_Upload.find_one({"_id": ObjectId(post_id)})
     commets = list(Comments_DATA.find({"post_id" : ObjectId(post_id)}).sort("created_at" , -1))
     total = Comments_DATA.count_documents({"post_id":ObjectId(post_id)})
-    return render_template('post_details.html', post=post , c=commets , total=total)
+    recommended_posts = list(User_Upload.find({'_id': {'$ne': ObjectId(post_id)}}).limit(3))
+    return render_template('post_details.html', post=post , c=commets , total=total , Re_post=recommended_posts)
 
 
 @app.route("/search" , methods=["GET"])
@@ -109,7 +102,9 @@ def dash(password):
     if(password == PASSSWORD):
            dashPost = User_Upload.find({} , {"_id":1 , "Title":1})
            cout_post = User_Upload.count_documents({})
-           return render_template("DashBoard.html" , posts=dashPost , count= cout_post)
+           Com = Comments_DATA.find({} , {"_id":1 , "username":1 , "msgs":1})
+           Count_Com = Comments_DATA.count_documents({})
+           return render_template("DashBoard.html" , posts=dashPost , count= cout_post , Com = Com , Talco=Count_Com)
     else:
         return render_template("Err.html" , msg = "You Are Not A Developer")
         
@@ -127,9 +122,21 @@ def delete(post_id):
         return jsonify({"ERROR" : "ERROR ON DELETING THE POST"})
     
 
+@app.route("/user-name")
+def user_name():
+    userName = request.args.get("user")
+    if not userName:
+        return jsonify({"error":"User is Not Found"}) , 404
+    
+    user_data={
+        "Username":userName
+    }
+    
+    USER_name.insert_one(user_data)
+    return redirect(url_for('home'))
+    
 
 
-        
 @app.route("/upload", methods=["POST"])
 def upload():
     try:
@@ -192,6 +199,18 @@ def comments():
         return jsonify({"Err" : e})
         
      
+@app.route("/delete/<post_id>" , methods=["POST"])
+def dele_com(post_id):
+    try:
+        Comments_DATA.delete_one({"_id" : ObjectId(post_id)})
+        return redirect(url_for("home"))
+    except:
+        return jsonify("Unbale To Delete The Post...................................")
+    
+
+@app.route("/set")
+def seting():
+    return render_template("setting.html")
 
 
 @app.route("/about")
