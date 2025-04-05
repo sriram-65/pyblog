@@ -8,13 +8,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
    
 </head>
 <body>
+  
     <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navbar">
         <div class="container-fluid">
-          <a class="navbar-brand brand" href="/">Blogsee</a>
+          <a class="navbar-brand brand" href="/"><i class="fa-solid fa-rss"></i> Blogsee</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -27,10 +28,14 @@
                 <a class="nav-link" href="/about">About</a>
               </li>
               <li class="nav-item me-5">
+                <a class="nav-link" href="/set">Settings</a>
+              </li>
+              <li class="nav-item me-5">
                 <a class="nav-link" href="/uploadge">Upload</a>
               </li>
             
             </ul>
+          
             <form class="d-flex" role="search" method="GET" action="/search">
               <input class="form-control me-3" name="query" type="search" required placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-success" type="submit" id="search">Search</button>
@@ -40,14 +45,27 @@
           </div>
         </div>
       </nav>
-
-
+    
+    <div class="main-content" id="main-content">
+      <div class="ask-user">
+        <div class="container">
+          <div class="input-group">
+            <p class="alert alert-info" role="alert">We Are Just Asking Your Name For First Time We Don't Ask Your Name Again</p>
+            
+            <input type="text" placeholder="Enter Your Name:" required id="inp">
+           <br>
+            <button class="btn btn-primary" id="ok-btn">Ok</button>
+           
+          </div>
+        </div>
+      </div>
+    </div>
 
 
       <section id="home">
 
         <div class="container">
-         
+       
           <h1 class="text-capitalize">Make People <b>Connected With Us.<b></h1>
           <br>
           <p>Thank You For Joining With Us .. Have Great Day</p>
@@ -59,7 +77,11 @@
   <hr>
   <br>
   <section id="post">
+    <h2> POSTS </h2>
+    <a href="{{url_for('recent')}}"> Show Recent Post </a>
+    <br>
     <div class="container">
+         
         <div class="row justify-content-center">
             {% if data %}
                 {% for i in data %}
@@ -108,44 +130,10 @@
     </div>
 </section>
 
+  <hr>
 
-
-    <footer class="bd-footer py-4 py-md-5 mt-5 bg-body-tertiary">
-      <div class="container py-4 py-md-5 px-4 px-md-3 text-body-secondary">
-        <div class="row">
-          <div class="col-lg-3 mb-3">
-            <a class="d-inline-flex align-items-center mb-2 text-body-emphasis text-decoration-none" href="/" aria-label="Bootstrap">
-             
-              <span class="fs-5">Blogsee</span>
-            </a>
-            <ul class="list-unstyled small">
-              <li class="mb-2">Designed and built with all the love in the world by the <a href="#">SRIRAM </a> with the help of <a href="#">My Laptop</a>.</li>
-              <li class="mb-2">Code licensed <a href="#" target="_blank" rel="license noopener">MIT</a>, docs <a href="#" target="_blank" rel="license noopener">@SRIRAM</a>.</li>
-              <li class="mb-2">Currently v1.0.0</li>
-            </ul>
-          </div>
-          <div class="col-6 col-lg-2 offset-lg-1 mb-3">
-            <h5>Links</h5>
-            <ul class="list-unstyled">
-              <li class="mb-2"><a href="/">Home</a></li>
-              <li class="mb-2"><a href="#">About</a></li>
-              <li class="mb-2"><a href="#">Upload</a></li>
-
-            </ul>
-          </div>
-          
-          <div class="col-6 col-lg-2 mb-3">
-            <h5>Community</h5>
-            <ul class="list-unstyled">
-              <li class="mb-2"><a href="#" target="_blank" rel="noopener">Issues</a></li>
-              <li class="mb-2"><a href="#" target="_blank" rel="noopener">Discussions</a></li>
-              <li class="mb-2"><a href="#" target="_blank" rel="noopener">Corporate sponsors</a></li>
-              <li class="mb-2"><a href="#" target="_blank" rel="noopener">Open Collective</a></li>
-              <li class="mb-2"><a href="#" target="_blank" rel="noopener">Stack Overflow</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+    <footer class="bd-footer py-4 py-md-5 mt-5 bg-body-tertiary" style="text-align:center">
+      <b> Designed And Developed By SRIRAM</b>
     </footer>
     </body>
 </html>
@@ -165,6 +153,27 @@
     background: transparent !important;
     backdrop-filter: blur(10px);
   }
+  .ask-user{
+    position: fixed;
+    z-index:100;
+    top:50%;
+    left:50%;
+    transform: translate(-50% , -50%);
+    padding:40px 40px 40px ;
+    background:white;
+    
+    
+  }
+  .main-content{
+    width:100%;
+    max-height:100%;
+    display: none;
+  }
+  .ask-user input{
+    padding: 10px 10px 10px;
+    display:inline-block;
+    
+  }
  
    .brand{
        font-weight: 900;
@@ -175,7 +184,6 @@
    #home{
     width:100%;
     height:100vh;
-  
     display: flex;
     justify-content: center;
     align-items: center;
@@ -208,6 +216,33 @@
 </style>
 
 <script>
+  var main = document.getElementById("main-content")
+
+  let okbtn = document.getElementById("ok-btn")
+  okbtn.onclick = function(){
+    let inp = document.getElementById("inp").value
+
+    localStorage.setItem("UserName" , inp)
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Thanks For Giving Your Name",
+      showConfirmButton: false,
+      timer: 1500
+    })
+    fetch(`/user-name?user=${inp}`).then(res=>res.json()).then(data=>console.log(data)).catch(er=>console.log(er))
+    
+    window.location.reload()
+    
+  }
+  getname = localStorage.getItem("UserName")
+  if(getname){
+    main.style.display = "none"
+  
+  }
+  else{
+    main.style.display = "block"
+  }
   window.addEventListener("offline" , ()=>{
     Swal.fire({
        title:"Connnection failed",
