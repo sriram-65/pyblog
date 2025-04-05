@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand brand" href="/">Blogsee</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+              <li class="nav-item me-5">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item me-5">
+                <a class="nav-link" href="/about">About</a>
+              </li>
+              <li class="nav-item me-5">
+                <a class="nav-link" href="#">Settings</a>
+              </li>
+              <li class="nav-item me-5">
+                <a class="nav-link" href="/uploadge">Upload</a>
+              </li>
+            
+            </ul>
+            <form class="d-flex" role="search" method="GET" action="/search">
+              <input class="form-control me-3" name="query" type="search" required placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit" id="search">Search</button>
+            </form>
+            
+    
+          </div>
+        </div>
+      </nav>
+      
+      <section>
+        <div class="container">
+           
+            <h1>Hello , <span id="name"></span></h1>
+            <br>
+            <p>Are You Enjoying Our PlatForm....</p>
+            <input type="text" placeholder="Edit Your Name From Here" id="inpu">
+            <button class="btn btn-danger" id="editname"> Edit Name </button>
+          </div>
+      </section>
+       
+    
+      
+</body>
+</html>
+<style>
+  section{
+    width:100%;
+    height:100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+  }
+  input{
+    border:1px solid black;
+    padding:10px 10px 10px;
+    border-radius:3px;
+  }
+  span{
+    color: chocolate;
+  }
+</style>
+<script>
+    let names = document.getElementById("name")
+    let username = localStorage.getItem("UserName")
+    names.innerHTML = username;
+   
+    let editname=document.getElementById("editname")
+    editname.onclick = function(){
+      let inpu = document.getElementById("inpu").value
+      
+      window.location.reload()
+      localStorage.setItem("UserName" , inpu)
+    }
+   
+
+    
+</script>
