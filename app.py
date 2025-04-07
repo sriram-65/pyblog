@@ -57,7 +57,7 @@ def check_comments(text):
 @app.route("/genDes/")
 def genDes():
     prompts = request.args.get("prompt")
-    Gentext = model.generate_content(f'Generate a description about this title and give only the description and display the text content on the text editor about a 250 words: {prompts} ')
+    Gentext = model.generate_content(f'Generate a Content according to this title and give only the Content and display the text content  about a 250 words: {prompts} ')
     return jsonify({"description": Gentext.text})  
 
 
