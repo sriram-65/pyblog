@@ -38,6 +38,9 @@ def recent():
     return render_template("recent.html" , recents = recents)
 
 
+def ai_reaction(text , des):
+    gene_cn = model.generate_content(f"Generate Your Response for this title {text} with One Emoji Give emoji and about 20 words Only.")
+    return gene_cn.text.strip()
 
 def check_comments(text):
     prompt = f"""
@@ -57,18 +60,27 @@ def check_comments(text):
 @app.route("/genDes/")
 def genDes():
     prompts = request.args.get("prompt")
-    Gentext = model.generate_content(f'Generate a Content according to this title and give only the Content and display the text content  about a 250 words: {prompts} ')
+    Gentext = model.generate_content(f'Generate a description about this title and give only the description and display the text content on the text editor about a 250 words: {prompts} ')
     return jsonify({"description": Gentext.text})  
 
 
 
 @app.route('/post/<post_id>')
 def post_details(post_id):
-    post = User_Upload.find_one({"_id": ObjectId(post_id)})
-    commets = list(Comments_DATA.find({"post_id" : ObjectId(post_id)}).sort("created_at" , -1))
-    total = Comments_DATA.count_documents({"post_id":ObjectId(post_id)})
-    recommended_posts = list(User_Upload.find({'_id': {'$ne': ObjectId(post_id)}}).limit(3))
-    return render_template('post_details.html', post=post , c=commets , total=total , Re_post=recommended_posts)
+    try:
+        
+        post = User_Upload.find_one({"_id": ObjectId(post_id)})
+        if not post:
+            return render_template("Err.html" , msg="POST IS NOT FOUND ):")
+        res = ai_reaction(post["Title"] , post["Description"])
+        commets = list(Comments_DATA.find({"post_id" : ObjectId(post_id)}).sort("created_at" , -1))
+        total = Comments_DATA.count_documents({"post_id":ObjectId(post_id)})
+        recommended_posts = list(User_Upload.find({'_id': {'$ne': ObjectId(post_id)}}).limit(3))
+        return render_template('post_details.html', post=post , c=commets , total=total , Re_post=recommended_posts , res_ai = res )
+    
+    except Exception as e:
+        return render_template("Err.html" , msg="Sorry Something Went Wrong in Our Server ):")
+        
 
 
 @app.route("/search" , methods=["GET"])
@@ -137,6 +149,8 @@ def user_name():
     
 
 
+
+
 @app.route("/upload", methods=["POST"])
 def upload():
     try:
@@ -151,6 +165,8 @@ def upload():
 
         image = cloudinary.uploader.upload(user_file ,  resource_type="auto") 
         image_url = image.get("secure_url")
+        
+       
 
         DATA = {
             "Title": user_title,
@@ -159,14 +175,12 @@ def upload():
             "Category": user_cat,
             "Image_url": image_url,
             "Create_at":datetime.utcnow(),
-          
-            
         }
 
         User_Upload.insert_one(DATA) 
 
         return redirect("/")
-
+    
     except Exception as e:
         return f"Upload failed: {str(e)}", 500  
 
