@@ -6,8 +6,6 @@ from bson import ObjectId
 import google.generativeai as genai
 from datetime import datetime
 
-
-
 app = Flask(__name__)
 app.secret_key = "@METACEO"
 
@@ -64,6 +62,12 @@ def genDes():
     return jsonify({"description": Gentext.text})  
 
 
+
+@app.route("/check-grammer")
+def checkG():
+    txt = request.args.get("fix-txt")
+    res = model.generate_content(f"Pls Check this Grammer {txt} and return only corrected Grammer don't give any another text only give corrected Text")
+    return jsonify({"text":res.text})
 
 @app.route('/post/<post_id>')
 def post_details(post_id):
