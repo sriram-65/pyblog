@@ -280,6 +280,60 @@
             <p class="mb-0">{{res_ai}}</p>
         </div>
         
+        <section class="comments-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3><i class="fas fa-comments me-2"></i> Comments ({{total}})</h3>
+                <button class="btn btn-sm btn-custom" data-bs-toggle="collapse" data-bs-target="#commentForm">
+                    <i class="fas fa-plus me-1"></i> Add Comment
+                </button>
+            </div>
+            
+   
+            <div class="collapse mb-4" id="commentForm">
+                <div class="comment-form">
+                    <form action="{{url_for('comments')}}" method="POST">
+                        <input type="hidden" name="post_id" value="{{ post._id }}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="name" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Your Comment</label>
+                            <textarea class="form-control" id="comment" name="msgs" rows="3" required placeholder="Share your thoughts..."></textarea>
+                            <br>
+                            <button id="change-grammer" class="btn btn-dark">Change Mistake</button>
+                        </div>
+                        <button type="submit" class="btn btn-custom"><i class="fas fa-paper-plane me-1"></i> Post Comment</button>
+                    </form>
+                </div>
+            </div>
+            
+
+            <div class="comments-list">
+                {% if c %}
+                    {% for com in c %}
+                    <div class="comment-card">
+                        <div class="comment-header">
+                            <div class="comment-avatar">{{ com.username[0]|upper }}</div>
+                            <div>
+                                <h6 class="mb-0">{{ com.username }}</h6>
+                                <small class="text-muted">{{ com.created_at.strftime('%B %d, %Y at %I:%M %p') }}</small>
+                            </div>
+                        </div>
+                        <div class="comment-body mt-2">
+                            <p class="mb-0">{{ com.msgs }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No comments yet. Be the first to share your thoughts!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
    
         {% if Re_post %}
         <section class="my-5">
@@ -306,57 +360,7 @@
         {% endif %}
         
      
-        <section class="comments-section">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3><i class="fas fa-comments me-2"></i> Comments ({{total}})</h3>
-                <button class="btn btn-sm btn-custom" data-bs-toggle="collapse" data-bs-target="#commentForm">
-                    <i class="fas fa-plus me-1"></i> Add Comment
-                </button>
-            </div>
-            
-   
-            <div class="collapse mb-4" id="commentForm">
-                <div class="comment-form">
-                    <form action="{{url_for('comments')}}" method="POST">
-                        <input type="hidden" name="post_id" value="{{ post._id }}">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Your Name</label>
-                            <input type="text" class="form-control" id="name" name="username" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="comment" class="form-label">Your Comment</label>
-                            <textarea class="form-control" id="comment" name="msgs" rows="3" required placeholder="Share your thoughts..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-custom"><i class="fas fa-paper-plane me-1"></i> Post Comment</button>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- Comments List -->
-            <div class="comments-list">
-                {% if c %}
-                    {% for com in c %}
-                    <div class="comment-card">
-                        <div class="comment-header">
-                            <div class="comment-avatar">{{ com.username[0]|upper }}</div>
-                            <div>
-                                <h6 class="mb-0">{{ com.username }}</h6>
-                                <small class="text-muted">{{ com.created_at.strftime('%B %d, %Y at %I:%M %p') }}</small>
-                            </div>
-                        </div>
-                        <div class="comment-body mt-2">
-                            <p class="mb-0">{{ com.msgs }}</p>
-                        </div>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="text-center py-4">
-                        <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
-                        <p class="text-muted">No comments yet. Be the first to share your thoughts!</p>
-                    </div>
-                {% endif %}
-            </div>
-        </section>
+        
     </main>
     
     
@@ -375,14 +379,44 @@
             if (storedName) {
                 nameInput.value = storedName;
             }
-            
-       
-            const commentForm = document.querySelector('.comment-form form');
-            if (commentForm) {
-                commentForm.addEventListener('submit', function() {
-                    localStorage.setItem('UserName', nameInput.value);
-                });
+
+
+
+            const cInput = document.getElementById('comment');
+
+            document.getElementById("change-grammer").disabled = true
+
+            document.getElementById("change-grammer").onclick = async function(e) {
+                e.preventDefault()
+                const text = cInput.value;
+                document.getElementById("change-grammer").innerHTML = "Loading ..."
+                await fetch(`/check-grammer?fix-txt=${encodeURIComponent(text)}`)
+                    .then(res => res.json())
+                    .then(data =>{
+                         cInput.value=data["text"]
+                         alert("Mistake is Fixed")
+                         document.getElementById("change-grammer").innerHTML = "Change Mistake"
+                        })
+                    .catch(err=>console.log(err))
+
+                    
             }
+
+            document.getElementById("change-grammer").disabled = true
+
+            cInput.oninput = function(){
+                
+                if (cInput.value){
+                    document.getElementById("change-grammer").disabled = false 
+                }
+                else{
+                    document.getElementById("change-grammer").disabled = true 
+                }
+
+            }
+           
+            
+
         
             document.getElementById('copy').addEventListener('click', function() {
                 const url = window.location.href;
@@ -397,10 +431,10 @@
                 });
             });
             
-            
-            {% if not c %}
-                document.getElementById('commentForm').classList.add('show');
-            {% endif %}
+        {% if not c %}
+            document.getElementById('commentForm').classList.add('show');
+        {% endif %}
+           
         });
     </script>
 </body>
