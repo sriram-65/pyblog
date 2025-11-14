@@ -9,7 +9,7 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = "@METACEO"
 
-genai.configure(api_key="AIzaSyAXB3gYzgcenwb8Q_hirLej4dtnkWOGoUI")
+genai.configure(api_key="AIzaSyBO26sIWdEVCSJ5Iyh57bXYpfRta1qk758")
 model = genai.GenerativeModel("gemini-2.0-flash")
 live_streams = {}
 cloudinary.config(
@@ -245,4 +245,5 @@ def notfound(a):
     
 if __name__ == "__main__":
     app.run( debug=True , port=1111)
+
 
